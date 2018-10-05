@@ -1,3 +1,8 @@
+# v0.2 Adaptation Edition
+Made changes to adapt to Hearthstone
+
+
+
 # v0.1 Initial Commit Edition
 Initial Commit
 

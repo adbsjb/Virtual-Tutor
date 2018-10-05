@@ -4,8 +4,8 @@ var userInput = $("#myInput")[0];
 var divs = [];
 var index = 0;
 var allSets;
-autocompleteSetup(userInput);
-getSets();
+//autocompleteSetup(userInput);
+//getSets();
 
 function replaceSymbols(newString){
 	//replaces all references to symbols with actual symbols in given string
@@ -74,9 +74,10 @@ function replaceSymbols(newString){
 	newString = newString.replace(/{T}/g, '<span class="tapSymbol"></span>');
 	newString = newString.replace(/{Q}/g, '<span class="untapSymbol"></span>');
 	newString = newString.replace(/{CHAOS}/g, '<span class="chaosSymbol"></span>');	
-	newString = newString.replace(/\n/g, '<br>');
 	newString = newString.replace(/\.5/g, '½');
 	*/
+	newString = newString.replace(/\\n/g, '<br>');
+	newString = newString.replace(/_/g, ' ');
 	return newString;
 }
 
@@ -104,38 +105,26 @@ function getRulings(cardObject){
 	}
 }
 
-function clearFields(){	
+function clearFields(mode){	
 	//clear all fields
+
+	if(mode != "notInput"){
+		$("#myInput")[0].value = "";
+		currentCardObject = "";
+	}
 	$("#name")[0].innerHTML = "";
-	$("#mana_cost")[0].innerHTML = "";
+	$("#cost")[0].innerHTML = "";
 	$("#cardImage")[0].src = "";
 	$("#type_line")[0].innerHTML = "";
 	$("#setImage")[0].src = "";
 	$("#setImage")[0].title = "";
 	$("#setImage")[0].alt = "";
 	$("#oracle_text")[0].innerHTML = "";
-	$("#artist")[0].innerHTML = "";
-	$("#scryfall_Link")[0].innerHTML = "";
-	$("#pt")[0].innerHTML = "";
-	$("#flavor_text")[0].innerHTML = "";
+	$("#attack")[0].innerHTML = "";
+	$("#health")[0].innerHTML = "";
 	$("#cardWrapper")[0].classList.remove($("#cardWrapper")[0].classList.item(0));
 	$("#cardWrapper")[0].classList.add("noBorder");	
-  /*$("#lowestPrice")[0].innerHTML = "";
-	$("#lowestPriceEx")[0].innerHTML = "";
-	$("#lowestPriceFoil")[0].innerHTML = "";
-	$("#averagePrice")[0].innerHTML = "";*/
-	$("#rulingsWrapper")[0].classList.remove("visible");
-	$("#rulingsWrapper")[0].classList.add("invisible");
-	$("#mcm_link")[0].innerHTML = "";
 	$("#setDropdown")[0].innerHTML = "";
-	$("#myInput")[0].value = "";
-	$("#cardWrapper")[0].classList.add("invisible");
-	$("#cardWrapper")[0].classList.remove("visible");
-	currentCardObject = "";
-	$('#collapseRulings').collapse('hide');
-	$("#generalSearchResults")[0].innerHTML = "";
-	$("#generalInput")[0].value = "";
-	$("#averagePrice")[0].innerHTML = "";
 }
 
 function cardMarketDetails(cardObject){
@@ -493,58 +482,51 @@ function getRarity(cardObject, imageDest){
 }
 
 function populateCard(cardObject){
-	$("#name")[0].innerHTML = cardObject.name;
-	var cardCost = cardObject.cost;
-	$("#mana_cost")[0].innerHTML = replaceSymbols(cardCost);
+
 	if($("#checkImage")[0].checked){
+		clearFields("notInput");
 		if(cardObject.rarity == "Legendary"){
-			$("#cardImage")[0].src = cardObject.image_uris.imgGold;
+			$("#cardImage")[0].src = cardObject.imgGold;
 		}
 		else{
-			$("#cardImage")[0].src = cardObject.image_uris.img;
+			$("#cardImage")[0].src = cardObject.img;
 		}
 	}
 	else{
-		$("#cardImage")[0].src = "";
-	}
-	
-	$("#type_line")[0].innerHTML = cardObject.type;
-	var oracle = cardObject.text;
-	if(oracle != null){
-		$("#oracle_text")[0].innerHTML = replaceSymbols(oracle);
-	}
-	else{
-		$("#oracle_text")[0].innerHTML = "";			
-	}
-	if(cardObject.flavor != null){
-	$("#flavor_text")[0].innerHTML = replaceSymbols(cardObject.flavor);
-	}
-	else{
-	$("#flavor_text")[0].innerHTML = "";
-	}
-	$("#artist")[0].innerHTML = "Artist: " + cardObject.artist;
-	var attack;
-	var health;
-	if(cardObject.attack && cardObject.health != null){
-		attack = replaceSymbols(cardObject.attack) + "/";
-		health = replaceSymbols(cardObject.health);
+		clearFields("notInput");
+		$("#name")[0].innerHTML = cardObject.name;
+		var cardCost = cardObject.cost;
+		$("#cost")[0].innerHTML = replaceSymbols(String(cardCost));
+		if(cardObject.race != null){
+			$("#type_line")[0].innerHTML = cardObject.race;
 		}
-	else{
-		attack = "";
-		health = "";
+		else{
+			$("#type_line")[0].innerHTML = "";
+		}
+		var oracle = cardObject.text;
+		if(oracle != null){
+			$("#oracle_text")[0].innerHTML = replaceSymbols(oracle);
+		}
+		else{
+			$("#oracle_text")[0].innerHTML = "";			
+		}
+		var attack;
+		var health;
+		if(cardObject.attack && cardObject.health == null){
+			attack = "";
+			health = "";
+		}
+		else{
+			attack = cardObject.attack;
+			health = cardObject.health;
+		}
+		$("#attack").innerHTML = attack;
+		$("#health").innerHTML = health;
+		$("#cardWrapper")[0].classList.remove($("#cardWrapper")[0].classList.item(0));
+		currentCardObject = cardObject;		
+		$("#cardWrapper")[0].classList.add("visible");
+		$("#cardWrapper")[0].classList.remove("invisible");
 	}
-	$("#pt")[0].innerHTML = attack + health;			
-	$("#cardWrapper")[0].classList.remove($("#cardWrapper")[0].classList.item(0));
-	/* if($("#checkBorder")[0].checked == true){
-		$("#cardWrapper")[0].classList.add(cardObject.border_color + "Border");
-	} */
-	//cardMarketDetails(cardObject);
-	//getRulings(cardObject);
-	//getSetIcon(cardObject, '#setImage');	
-	//getRarity(cardObject, '#setImage');
-	currentCardObject = cardObject;		
-	$("#cardWrapper")[0].classList.add("visible");
-	$("#cardWrapper")[0].classList.remove("invisible");
 }
 
 function loadDoc(){	
