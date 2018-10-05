@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="css/styles.css">
+		<script src="js/jquery.js"></script>
+		<script src="js/bootstrap.bundle.min.js"></script>
+		<title>Virtual Cardboard Tutor</title>
+		<link rel="shortcut icon" type="image/png" href="symbols/icon.png"/>	<!--Favicon made by Freepik (http://www.freepik.com) from Flaticon (https://www.flaticon.com/) is licensed by CC 3.0 BY (http://creativecommons.org/licenses/by/3.0/)-->
+	</head>
+	<body>
+	<div style="margin-bottom:10px;" class="btn-group" role="group" aria-label="Tabs">
+			<button id="btnNamed" type="button" class="btn btn-outline-dark active" onclick="namedSearch()">Named Search</button>
+			<button id="btnGeneral" type="button" class="btn btn-outline-dark" onclick="generalSearch()">General Search</button>
+		</div>
+		<form id="inputForm" autocomplete="off" class="show" onSubmit="return false;">
+
+			<div class="autocomplete">
+				<input id="myInput" type="search" value="Leeroy Jenkins">
+			</div>
+			<div id="divCheckboxes">
+				<input id="checkImage" type="checkbox">
+				<label for="checkImage">Image</label>
+			</div>
+			<div id="divButtons">
+				<button class="btn btn-outline-secondary" id="btnRequestData" type="button" onclick="loadDoc()">Request Data</button>
+				<button class="btn btn-outline-secondary" id="btnClear" type="button" onclick="clearFields()">Clear</button>
+			</div>
+		</form>
+		
+		<form id="generalInputForm" autocomplete="off" class="hide" onSubmit="return false;">
+
+			<div class="autocomplete">
+				<input id="generalInput" type="search" value="">
+			</div>
+			<div id="divButtons">
+				<button class="btn btn-outline-secondary" id="btnLoadGeneralSearch" type="button" onclick="loadGeneralSearch()">Request Data</button>
+				<button class="btn btn-outline-secondary" id="btnClear" type="button" onclick="clearFields()">Clear</button>
+			</div>
+		</form>
+		<div id="searchCollapse" class="collapse">
+			<div id="generalSearchResults" class="card card-body">
+			</div>					
+		</div>
+		<div id="namedWrapper" class="show">
+			<div id="cardWrapper" class="noBorder">
+			<p id="name"></p>
+			<p id="mana_cost"></p>
+			<div id="cardImageBox">
+				<img id="cardImage">
+			</div>
+			<p id="type_line"></p>
+			<div id="setImageBox">
+				<div id="setImage"></div>
+				<div id="setDropdown">
+				</div>
+			</div>
+			<br>
+			<br>
+			<p id="oracle_text"></p>
+			<p id="flavor_text"></p>
+			<p id="artist"></p>
+			<p id="pt"></p>
+			</div>
+			<div id="scryfallLinkBox">
+				<a id="scryfall_Link" target="_blank"></a>
+			</div>
+			<br>
+			<div id="cardMarketWrapper">	
+				<a id="mcm_link" target="_blank"></a>
+				<p id="averagePrice"></p>
+				
+			<!--<p id="lowestPrice"></p>
+				<p id="lowestPriceEx"></p>
+				<p id="lowestPriceFoil"></p>
+				<p id="averagePrice"></p>-->
+			</div>
+			<br>
+			<div id="rulingsWrapper" class="invisible">
+				<p>
+					<button id="rulingsButton" class="btn btn-outline-secondary" type="button" data-toggle="collapse" data-target="#collapseRulings" aria-expanded="false" aria-controls="collapseRulings">
+						Card Rulings
+					</button>
+				</p>
+				<div class="collapse" id="collapseRulings">
+					<div id="rulings" class="card card-body">
+					</div>
+				</div>
+			</div>			
+		</div>
+		<script src="js/script.js"></script>
+		
+		
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-125550760-1"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+
+		  gtag('config', 'UA-125550760-1');
+		</script>
+
+	</body>
+</html>
