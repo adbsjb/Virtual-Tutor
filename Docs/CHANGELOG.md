@@ -1,3 +1,10 @@
+# v0.2.1 Autocomplete Edition
+Converted autocomplete to work with Hearthstone
+
+* Autocomplete still not working properly but I will work on it more at some point
+
+
+
 # v0.2 Adaptation Edition
 Made changes to adapt to Hearthstone
 

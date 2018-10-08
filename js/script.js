@@ -4,7 +4,8 @@ var userInput = $("#myInput")[0];
 var divs = [];
 var index = 0;
 var allSets;
-//autocompleteSetup(userInput);
+var allCards = [];
+autocompleteSetup(userInput);
 //getSets();
 
 function replaceSymbols(newString){
@@ -241,6 +242,26 @@ function generalSearch(){
 function autocompleteSetup(input){
 
 	var currentFocus;
+	//get all Hearthstone cards
+	var xhttp = new XMLHttpRequest();
+	xhttp.open("GET", "https://omgvamp-hearthstone-v1.p.mashape.com/cards", true);
+		xhttp.setRequestHeader("X-Mashape-Key", "C45o7xbfTomshVcMhADBdNI8YBvSp1J9Sytjsny11IUCxM8NWV");
+		xhttp.setRequestHeader("Accept", "application/json");
+		xhttp.send();
+
+
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				allCardsWithSets = JSON.parse(this.response);
+				allCardsWithSets = Object.values(allCardsWithSets);
+				for(var i = 0; i < allCardsWithSets.length; i++){
+					for(var j = 0; j < allCardsWithSets[i].length; j++){
+						allCards.push(allCardsWithSets[i][j]);
+					}
+				}
+			}
+		}
+	
 	
 	//listen for something to be typed (in input box?)
 	input.addEventListener("input", function (e){
@@ -257,58 +278,45 @@ function autocompleteSetup(input){
 		count = 0;
 		
 		if(input.length > 2 ){
-			//get autocomplete object from scryfall. This stores the 20 closest matches to whatever was typed in.
-			var xhttp = new XMLHttpRequest();
-			if(input != ""){		
-				xhttp.open("GET", "https://api.scryfall.com/cards/autocomplete?q=" + input, true);
-				xhttp.send();
-			}		
-
+			//get autocomplete object from allCards array.
+			
 			a = document.createElement("DIV");
 			a.classList.add(index);
 			index++;
 
 			//when API request is returned, do this get elements of it and add it to a list
-			xhttp.onreadystatechange = function() {
-				if (this.readyState == 4 && this.status == 200) {
-				
-					var array = JSON.parse(this.responseText);					
-					a.setAttribute("id", inputBox.id + "autocomplete-list");
-					a.setAttribute("class", "autocomplete-items");					
-					divs.push(a.classList[0]);					
-					inputBox.parentNode.appendChild(a);					
 					
-					//if more than one autocomplete is displayed at once, remove all but the latest one
-					if(divs.length > 1){
-						for(var i = 0; i < divs.length - 1; i++){
-							var currentDiv = $("." + divs[i])[0];
-							currentDiv.outerHTML = "";
-							divs.shift();
-						}
-						
-					}
-					
-					//builds a autocomplete item to be added to the autocomplete list.
-					for (i = 0; i < array.data.length; i++){
-						
-						b = document.createElement("DIV");
-						var searchInString = array.data[i].toUpperCase().search(input.toUpperCase());
-						var caseCorrectInput = array.data[i].substr(searchInString, input.length);
-						b.innerHTML = array.data[i];
-						b.innerHTML = b.innerHTML.replace(caseCorrectInput, "<strong>" + caseCorrectInput + "</strong>")
-						b.innerHTML += "<input type='hidden' value='" + array.data[i] + "'>";
-						b.addEventListener("click", function(e) {
-							var test = $("#myInput");
-							inputBox.value = this.innerText;
-							closeAllLists();
-						});
-						a.appendChild(b);
-					}
-					
-
+			a.setAttribute("id", inputBox.id + "autocomplete-list");
+			a.setAttribute("class", "autocomplete-items");					
+			divs.push(a.classList[0]);					
+			inputBox.parentNode.appendChild(a);					
+			
+			//if more than one autocomplete is displayed at once, remove all but the latest one
+			if(divs.length > 1){
+				for(var i = 0; i < divs.length - 1; i++){
+					var currentDiv = $("." + divs[i])[0];
+					currentDiv.outerHTML = "";
+					divs.shift();
 				}
+				
 			}
 			
+			//builds a autocomplete item to be added to the autocomplete list.
+			for (i = 0; i < allCards.length; i++){
+				
+				b = document.createElement("DIV");
+				var searchInString = allCards[i].name.toUpperCase().search(input.toUpperCase());
+				var caseCorrectInput = allCards[i].name.substr(searchInString, input.length);
+				b.innerHTML = allCards[i].name;
+				b.innerHTML = b.innerHTML.replace(caseCorrectInput, "<strong>" + caseCorrectInput + "</strong>")
+				b.innerHTML += "<input type='hidden' value='" + allCards[i].name + "'>";
+				b.addEventListener("click", function(e) {
+					inputBox.value = this.innerText;
+					closeAllLists();
+				});
+				a.appendChild(b);
+			}
+
 		}
 		
 	});
